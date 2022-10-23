@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import na.learn.asteroidradar.BuildConfig
+import na.learn.asteroidradar.utils.Constants
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -77,7 +78,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         withContext(Dispatchers.IO) {
             try {
                 _pictureOfDay.postValue(
-                    AsteroidApiService.AsteroidApi.retrofitService.getPictureOfTheDay(BuildConfig.NASA_API_KEY)
+                    AsteroidApiService.AsteroidApi.retrofitService.getPictureOfTheDay(Constants.API_KEY)
                 )
             } catch (err: Exception) {
                 Log.e("refreshPictureOfDay", err.printStackTrace().toString())

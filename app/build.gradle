@@ -6,12 +6,6 @@ plugins {
     id 'kotlin-android-extensions'
 }
 
-File secretsFile = rootProject.file("secrets.properties")
-Properties secretsProperties = new Properties()
-
-if (secretsFile.exists()) {
-    secretsProperties.load(new FileInputStream(secretsFile))
-}
 
 android {
     compileSdk 32
@@ -25,14 +19,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField(
-                "String",
-                "NASA_API_KEY",
-                secretsProperties.getProperty(
-                        "NASA_API_KEY",
-                        System.getenv("NASA_API_KEY")
-                )
-        )
 
     }
 

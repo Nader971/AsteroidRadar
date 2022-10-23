@@ -14,6 +14,7 @@ import na.learn.asteroidradar.database.AsteroidDatabase
 import na.learn.asteroidradar.database.asDatabaseModel
 import na.learn.asteroidradar.database.asDomainModel
 import na.learn.asteroidradar.models.Asteroid
+import na.learn.asteroidradar.utils.Constants
 import org.json.JSONObject
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -51,7 +52,7 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
     suspend fun refreshAsteroids() {
         withContext(Dispatchers.IO) {
             try {
-                val asteroids = AsteroidApiService.AsteroidApi.retrofitService.getAsteroids(BuildConfig.NASA_API_KEY)
+                val asteroids = AsteroidApiService.AsteroidApi.retrofitService.getAsteroids(Constants.API_KEY)
                 val result = parseAsteroidsJsonResult(JSONObject(asteroids))
                 database.asteroidDao.insertAll(*result.asDatabaseModel())
                 Log.d("Refresh Asteroids", "Success")
