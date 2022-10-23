@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="asteroid"
+            type="na.learn.asteroidradar.models.Asteroid" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:background="@color/app_background">
+
+
+        <TextView
+            android:id="@+id/txt_title_asteroid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@{asteroid.codename}"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/guidelineRight"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/txt_close_date_aproche"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            tools:text="@string/close_approach_data_title"
+            android:text="@{asteroid.closeApproachDate}"
+            android:textColor="@color/default_text_color"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/txt_title_asteroid"
+            app:layout_constraintTop_toBottomOf="@+id/txt_title_asteroid" />
+
+        <ImageView
+            android:id="@+id/img_status_hazardous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_close_date_aproche"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineLeft"
+            app:layout_constraintTop_toTopOf="@+id/txt_title_asteroid"
+            app:srcCompat="@drawable/ic_status_potentially_hazardous"
+            android:contentDescription="@{asteroid.codename}"
+            app:statusIcon="@{asteroid.potentiallyHazardous}"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="395dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
