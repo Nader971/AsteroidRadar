@@ -25,7 +25,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@drawable/asteroid_safe"
-            android:contentDescription="@string/asteroid_hazard_image" />
+            tools:ignore="ContentDescription"
+            />
 
         <ScrollView
             android:layout_width="0dp"

@@ -49,9 +49,9 @@
             app:layout_constraintBottom_toBottomOf="@+id/txt_close_date_aproche"
             app:layout_constraintEnd_toStartOf="@+id/guidelineLeft"
             app:layout_constraintTop_toTopOf="@+id/txt_title_asteroid"
-            app:srcCompat="@drawable/ic_status_potentially_hazardous"
-            android:contentDescription="@{asteroid.codename}"
-            app:statusIcon="@{asteroid.potentiallyHazardous}"/>
+            tools:src="@drawable/ic_status_potentially_hazardous"
+            app:statusIcon="@{asteroid.potentiallyHazardous}"
+            tools:ignore="ContentDescription"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineRight"

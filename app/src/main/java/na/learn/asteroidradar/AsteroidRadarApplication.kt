@@ -1,8 +1,6 @@
 package na.learn.asteroidradar
 
 import android.app.Application
-import android.content.Context
-import android.os.Build
 import androidx.work.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +25,9 @@ class AsteroidRadarApplication : Application() {
 
     private fun setupRecurringWork() {
         val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiresCharging(true)
+            .setRequiresBatteryNotLow(true)
             .apply {
                 setRequiresDeviceIdle(true)
             }.build()

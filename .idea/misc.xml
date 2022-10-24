@@ -4,7 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Nader Mamdouh/AndroidStudioProjects/AsteroidRadar/app/src/main/res/drawable/ic_help_circle.xml" value="0.179" />
+        <entry key="..\:/Users/Nader Mamdouh/AndroidStudioProjects/AsteroidRadar/app/src/main/res/drawable/ic_status_normal.xml" value="0.2035" />
+        <entry key="..\:/Users/Nader Mamdouh/AndroidStudioProjects/AsteroidRadar/app/src/main/res/drawable/ic_status_potentially_hazardous.xml" value="0.2035" />
         <entry key="..\:/Users/Nader Mamdouh/AndroidStudioProjects/AsteroidRadar/app/src/main/res/layout/activity_main.xml" value="0.15489130434782608" />
+        <entry key="..\:/Users/Nader Mamdouh/AndroidStudioProjects/AsteroidRadar/app/src/main/res/layout/asteroid_item.xml" value="0.20153985507246377" />
         <entry key="..\:/Users/Nader Mamdouh/AndroidStudioProjects/AsteroidRadar/app/src/main/res/layout/ateroid_item.xml" value="0.15489130434782608" />
         <entry key="..\:/Users/Nader Mamdouh/AndroidStudioProjects/AsteroidRadar/app/src/main/res/layout/ateroid_item_view.xml" value="0.15489130434782608" />
         <entry key="..\:/Users/Nader Mamdouh/AndroidStudioProjects/AsteroidRadar/app/src/main/res/layout/fragment_detail.xml" value="0.15489130434782608" />
