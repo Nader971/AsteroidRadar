@@ -1,30 +1,19 @@
 package na.learn.asteroidradar.main
 
-import android.os.Build
 import android.os.Bundle
 import android.view.*
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import na.learn.asteroidradar.R
 import na.learn.asteroidradar.databinding.FragmentMainBinding
-import na.learn.asteroidradar.models.Asteroid
-import na.learn.asteroidradar.utils.FilterAsteroid
 
 
 class MainFragment : Fragment() {
 
     private val viewModel: MainViewModel by lazy {
-        val activity = requireNotNull(this.activity) {
-            "You can only access the viewModel after onViewCreated()"
-        }
-
-        ViewModelProvider(
-            this,
-            MainViewModel.Factory(activity.application)
-        ).get(MainViewModel::class.java)
+        ViewModelProvider(this)[MainViewModel::class.java]
     }
 
     private val asteroidAdapter = MainAdapter(MainAdapter.AsteroidListener { asteroid ->
@@ -44,24 +33,26 @@ class MainFragment : Fragment() {
         viewModel.navigateToDetailAsteroid.observe(viewLifecycleOwner, Observer { asteroid ->
             if (asteroid != null) {
                 this.findNavController().navigate(MainFragmentDirections.actionShowDetail(asteroid))
-                viewModel.onAsteroidNavigated()
+                viewModel.doneNavigated()
             }
         })
+
+
+        viewModel.asteroids.observe(viewLifecycleOwner, Observer { asteroids ->
+
+            if(asteroids != null) {
+                asteroidAdapter.submitList(asteroids)
+            }
+
+        })
+
+
 
         setHasOptionsMenu(true)
 
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.asteroidList.observe(viewLifecycleOwner, Observer<List<Asteroid>> { asteroid ->
-            asteroid.apply {
-                asteroidAdapter.submitList(this)
-            }
-        })
-    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_overflow_menu, menu)
@@ -69,19 +60,18 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        viewModel.onChangeFilter(
+
             when (item.itemId) {
-                R.id.show_rent_menu -> {
-                    FilterAsteroid.TODAY
+                R.id.show_today_menu -> {
+                    viewModel.todayClicked()
                 }
-                R.id.show_all_menu -> {
-                    FilterAsteroid.WEEK
+                R.id.show_next_week_menu -> {
+                    viewModel.nextWeekClicked()
                 }
                 else -> {
-                    FilterAsteroid.ALL
+                    viewModel.savedClicked()
                 }
             }
-        )
         return true
     }
 }

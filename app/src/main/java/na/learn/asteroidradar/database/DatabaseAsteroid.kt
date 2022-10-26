@@ -17,9 +17,9 @@ data class DatabaseAsteroid constructor(
     val isPotentiallyHazardous: Boolean
 )
 
-fun List<DatabaseAsteroid>.asDomainModel(): List<Asteroid> {
+fun ArrayList<Asteroid>.asDomainModel(): Array<DatabaseAsteroid> {
     return map {
-        Asteroid(
+        DatabaseAsteroid(
             id = it.id,
             codename = it.codename,
             closeApproachDate = it.closeApproachDate,
@@ -30,6 +30,7 @@ fun List<DatabaseAsteroid>.asDomainModel(): List<Asteroid> {
             isPotentiallyHazardous = it.isPotentiallyHazardous
         )
     }
+        .toTypedArray()
 }
 
 fun List<Asteroid>.asDatabaseModel(): Array<DatabaseAsteroid> {

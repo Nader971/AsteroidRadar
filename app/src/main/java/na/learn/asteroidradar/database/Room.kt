@@ -1,24 +1,25 @@
 package na.learn.asteroidradar.database
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
+import na.learn.asteroidradar.models.Asteroid
 
 
 @Dao
 interface AsteroidDao {
 
-    @Query("SELECT * FROM asteroids ORDER BY closeApproachDate DESC")
-    fun getAsteroids(): LiveData<List<DatabaseAsteroid>>
+    @Query("SELECT * FROM asteroids WHERE closeApproachDate >= :startDate AND closeApproachDate <= :endDate ORDER BY closeApproachDate ASC")
+    fun getAsteroids(startDate: String, endDate: String): Flow<List<Asteroid>>
 
-    @Query("SELECT * FROM asteroids WHERE closeApproachDate = :startDate ORDER BY closeApproachDate DESC")
-    fun getAsteroidsDay(startDate: String): LiveData<List<DatabaseAsteroid>>
-
-    @Query("SELECT * FROM asteroids WHERE closeApproachDate BETWEEN :startDate AND :endDate ORDER BY closeApproachDate DESC")
-    fun getAsteroidsDate(startDate: String, endDate: String): LiveData<List<DatabaseAsteroid>>
+    @Query("SELECT * FROM asteroids ORDER BY closeApproachDate ASC")
+    fun getAllAsteroids(): Flow<List<Asteroid>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg asteroid: DatabaseAsteroid)
+    fun insertAll(vararg asteroids: DatabaseAsteroid)
+
+    @Query("DELETE FROM asteroids WHERE closeApproachDate < :today")
+    fun deletePreviousDayAsteroids(today: String): Int
 }
 
 @Database(entities = [DatabaseAsteroid::class], version = 1, exportSchema = false)

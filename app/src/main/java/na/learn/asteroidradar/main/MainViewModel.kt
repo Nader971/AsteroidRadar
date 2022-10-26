@@ -1,49 +1,42 @@
 package na.learn.asteroidradar.main
 
 
-import android.annotation.SuppressLint
 import android.app.Application
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import na.learn.asteroidradar.models.Asteroid
 import na.learn.asteroidradar.models.PictureOfDay
-import na.learn.asteroidradar.api.AsteroidApiService
 import na.learn.asteroidradar.database.getDatabase
 import na.learn.asteroidradar.repository.AsteroidRepository
-import na.learn.asteroidradar.utils.FilterAsteroid
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import na.learn.asteroidradar.BuildConfig
-import na.learn.asteroidradar.utils.Constants
+import na.learn.asteroidradar.api.getPictureOfDay
+import na.learn.asteroidradar.repository.seventhDay
+import na.learn.asteroidradar.repository.today
+
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val database = getDatabase(application)
     private val asteroidRepository = AsteroidRepository(database)
 
-    private val _pictureOfDay = MutableLiveData<PictureOfDay>()
-    val pictureOfDay: LiveData<PictureOfDay>
+    private val _pictureOfDay = MutableLiveData<PictureOfDay?>()
+    val pictureOfDay: LiveData<PictureOfDay?>
         get() = _pictureOfDay
 
-    private val _navigateToDetailAsteroid = MutableLiveData<Asteroid>()
-    val navigateToDetailAsteroid: LiveData<Asteroid>
+    private val _navigateToDetailAsteroid = MutableLiveData<Asteroid?>()
+    val navigateToDetailAsteroid: LiveData<Asteroid?>
         get() = _navigateToDetailAsteroid
 
-    private var _filterAsteroid = MutableLiveData(FilterAsteroid.ALL)
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    val asteroidList = Transformations.switchMap(_filterAsteroid) {
-        when (it!!) {
-            FilterAsteroid.WEEK -> asteroidRepository.weekAsteroids
-            FilterAsteroid.TODAY -> asteroidRepository.todayAsteroids
-            else -> asteroidRepository.allAsteroids
-        }
+    fun doneNavigated() {
+        _navigateToDetailAsteroid.value = null
     }
 
+
+    private var _asteroids = MutableLiveData<List<Asteroid>>()
+    val asteroids: LiveData<List<Asteroid>>
+        get() = _asteroids
+
     init {
+        todayClicked()
         viewModelScope.launch {
             asteroidRepository.refreshAsteroids()
             refreshPictureOfDay()
@@ -54,35 +47,38 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _navigateToDetailAsteroid.value = asteroid
     }
 
-    @SuppressLint("NullSafeMutableLiveData")
-    fun onAsteroidNavigated() {
-        _navigateToDetailAsteroid.value = null
-    }
+    private suspend fun refreshPictureOfDay()  {
 
-    fun onChangeFilter(filter: FilterAsteroid) {
-        _filterAsteroid.postValue(filter)
+        _pictureOfDay.value = getPictureOfDay()
+
     }
 
 
-    class Factory(val app: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return MainViewModel(app) as T
-            }
-            throw IllegalArgumentException("Unable to construct ViewModel")
+
+    fun todayClicked() {
+        viewModelScope.launch {
+            database.asteroidDao.getAsteroids(today(), today())
+                .collect { asteroids ->
+                    _asteroids.value = asteroids
+                }
         }
     }
 
-    private suspend fun refreshPictureOfDay() {
-        withContext(Dispatchers.IO) {
-            try {
-                _pictureOfDay.postValue(
-                    AsteroidApiService.AsteroidApi.retrofitService.getPictureOfTheDay(Constants.API_KEY)
-                )
-            } catch (err: Exception) {
-                Log.e("refreshPictureOfDay", err.printStackTrace().toString())
+    fun nextWeekClicked() {
+        viewModelScope.launch {
+            database.asteroidDao.getAsteroids(seventhDay(), seventhDay())
+                .collect { asteroids ->
+                    _asteroids.value = asteroids
+                }
+        }
+    }
+
+    fun savedClicked() {
+        viewModelScope.launch {
+            database.asteroidDao.getAllAsteroids().collect { asteroids ->
+                _asteroids.value = asteroids
             }
         }
     }
+
 }
